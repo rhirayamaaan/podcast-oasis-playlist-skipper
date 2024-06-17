@@ -1,0 +1,28 @@
+{
+  "name": "podcast-oasis-playlist-skipper",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env --loader ts-node/esm ./index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhirayamaaan/podcast-oasis-playlist-skipper.git"
+  },
+  "author": "rhirayamaaan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rhirayamaaan/podcast-oasis-playlist-skipper/issues"
+  },
+  "homepage": "https://github.com/rhirayamaaan/podcast-oasis-playlist-skipper#readme",
+  "dependencies": {
+    "puppeteer": "^22.11.1",
+    "puppeteer-core": "^22.11.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
