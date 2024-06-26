@@ -7,7 +7,21 @@ declare global {
   }
 }
 
-const PLAYLIST_URL = process.env.SPOTIFY_PLAYLIST_URL || "";
+const SPOTIFY_PLAYLIST_URL = process.env.SPOTIFY_PLAYLIST_URL || "";
+if (!SPOTIFY_PLAYLIST_URL) {
+  throw new Error("SPOTIFY_PLAYLIST_URL is required");
+}
+
+const EPISODE_INTERVAL_MILLISECONDS = parseInt(
+  process.env.EPISODE_INTERVAL_MILLISECONDS || ""
+);
+
+if (
+  isNaN(EPISODE_INTERVAL_MILLISECONDS) ||
+  !isFinite(EPISODE_INTERVAL_MILLISECONDS)
+) {
+  throw new Error("EPISODE_INTERVAL_MILLISECONDS is required");
+}
 
 const playPlaylist = (page: Page) => {
   return new Promise<void>(async (resolve, reject) => {
@@ -58,9 +72,7 @@ const switchEpisode = (page: Page) => {
       }
     );
 
-    await page.evaluate(() => {
-      const EPISODE_INTERVAL = (6 * 60 + 20) * 1000;
-      // const EPISODE_INTERVAL = 10000;
+    await page.evaluate((episodeInterval) => {
       const target = document.querySelector(
         '[data-testid="now-playing-widget"]'
       );
@@ -77,7 +89,7 @@ const switchEpisode = (page: Page) => {
         window.goToNextEpisodeInPodcastOasisPlaylist?.();
       };
 
-      let timerId = setTimeout(clickSkipForwardButton, EPISODE_INTERVAL);
+      let timerId = setTimeout(clickSkipForwardButton, episodeInterval);
 
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -91,7 +103,7 @@ const switchEpisode = (page: Page) => {
             return;
           }
 
-          timerId = setTimeout(clickSkipForwardButton, EPISODE_INTERVAL);
+          timerId = setTimeout(clickSkipForwardButton, episodeInterval);
         });
       });
 
@@ -99,7 +111,7 @@ const switchEpisode = (page: Page) => {
         attributes: true,
         attributeFilter: ["aria-label"],
       });
-    });
+    }, EPISODE_INTERVAL_MILLISECONDS);
   });
 };
 
@@ -115,7 +127,7 @@ await page.setUserAgent(
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
 );
 
-await page.goto(PLAYLIST_URL);
+await page.goto(SPOTIFY_PLAYLIST_URL);
 
 try {
   await page.waitForSelector("#onetrust-close-btn-container button", {
