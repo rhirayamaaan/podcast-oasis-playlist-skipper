@@ -7,8 +7,7 @@ declare global {
   }
 }
 
-const PLAYLIST_URL =
-  "https://open.spotify.com/playlist/0tMC7syYIi0lM5wh6z47fE?si=4182ca3e1ea942a4";
+const PLAYLIST_URL = process.env.SPOTIFY_PLAYLIST_URL || "";
 
 const playPlaylist = (page: Page) => {
   return new Promise<void>(async (resolve, reject) => {
